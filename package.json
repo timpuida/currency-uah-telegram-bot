@@ -1,0 +1,22 @@
+{
+  "name": "currency_uah_bot",
+  "version": "1.0.0",
+  "description": "telegram bot for get actual uah currency",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index"
+  },
+  "keywords": [
+    "telegram",
+    "bot"
+  ],
+  "author": "Tim Puyda",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "node-telegram-bot-api": "0.51.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
