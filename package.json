@@ -4,12 +4,16 @@
   "description": "telegram bot for get actual uah currency",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index"
+    "start-dev": "nodemon index",
+    "start": "node index.js"
   },
   "keywords": [
     "telegram",
     "bot"
   ],
+  "engines": {
+      "node": "12.18.2"
+  },
   "author": "Tim Puyda",
   "license": "ISC",
   "dependencies": {
