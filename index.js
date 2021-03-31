@@ -3,13 +3,8 @@ const token = require('./token.js');
 const axios = require('axios');
 console.log('Bot has been started');
 let currencyHTML = null;
-let hostSite = 'https://currency-uah-bot.herokuapp.com:443';
-const bot = new TelegramBot(token, 
-	{	webHook: {
-			port: 443,
-		},
-	}
-);
+let hostSite = 'https://secret-lake-54973.herokuapp.com:443';
+const bot = new TelegramBot(token);
 bot.setWebHook(`${hostSite}/bot${token}`);
 // bot.on("polling_error", console.error);
 
