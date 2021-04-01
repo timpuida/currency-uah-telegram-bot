@@ -3,10 +3,8 @@ const token = require('./token.js');
 const axios = require('axios');
 console.log('Bot has been started');
 let currencyHTML = null;
-let hostSite = 'https://secret-lake-54973.herokuapp.com:443';
-const bot = new TelegramBot(token);
-bot.setWebHook(`${hostSite}/bot${token}`);
-// bot.on("polling_error", console.error);
+const bot = new TelegramBot(token, {polling:true});
+bot.on("polling_error", console.error);
 
 function chatId(msg){
 	return msg.chat.id;
@@ -17,11 +15,7 @@ function getCurrency(){
 	  	currencyData = res;
 	  })
 	  .catch( (err)=>console.log(err) )
-
 }
-
-
-
 bot.on('callback_query', (query)=>{
 	const chatId = query.message.chat.id;
 	function sendCurrency(){
@@ -49,12 +43,6 @@ bot.on('callback_query', (query)=>{
 		  	currencyName = "Рубля"
 			sendCurrency()
 		break;
-		// case 'btc': 
-		// 	buy = currencyData.data.find(item=>item.ccy==='BTC').buy;
-		//   	sale = currencyData.data.find(item=>item.ccy==='BTC').sale;
-		//   	currencyName = "Біткоїну"
-		// 	sendCurrency()
-		// break;
 	}
 })
 bot.on('message', msg=>{
@@ -94,15 +82,10 @@ bot.on('message', msg=>{
 							text: "Рубль",
 							callback_data: 'rub'
 						},
-						// {
-						// 	text: "Біткоїн",
-						// 	callback_data: 'btc'
-						// }
 					]
 					] 
 				}
 			})
-			// statements_1
 			break;
 		case 'Конвертація валют':
 			bot.sendMessage(chatId(msg), howToWrite, {
@@ -112,33 +95,32 @@ bot.on('message', msg=>{
 		default: 
 		let str = msg.text;
 		let [value, currencyFrom, currencyTo] = str.split(' ');
-		// console.log('value:',value, 'currencyFrom:',currencyFrom, 'currencyTo:',currencyTo);
 		if (currencyTo && currencyTo.toLowerCase()==="uah"){
 			if (currencyFrom.toLowerCase()==="usd"){
 				getCurrency()
-				let usdSale = currencyData.data.find(item=>item.ccy==='USD').buy;
-				bot.sendMessage(chatId(msg), `${value} x ${ Math.round(usdSale*100)/100} = ${value*usdSale} грн`, {parse_mode: "HTML"})
+				let usdBuy = currencyData.data.find(item=>item.ccy==='USD').buy;
+				bot.sendMessage(chatId(msg), `${value} x ${ Math.round(usdBuy*100)/100} = ${value*usdBuy} грн`, {parse_mode: "HTML"})
 			}
 			if (currencyFrom.toLowerCase()==="euro"){
 				getCurrency()
-				let euroSale = currencyData.data.find(item=>item.ccy==='EUR').buy;
-				bot.sendMessage(chatId(msg), `${value} x ${ Math.round(euroSale*100)/100} = ${value*euroSale} грн`, {parse_mode: "HTML"})
+				let euroBuy = currencyData.data.find(item=>item.ccy==='EUR').buy;
+				bot.sendMessage(chatId(msg), `${value} x ${ Math.round(euroBuy*100)/100} = ${value*euroBuy} грн`, {parse_mode: "HTML"})
 			}
 			if( currencyFrom.toLowerCase()==="rub"){
 				getCurrency()
-				let rubSale = currencyData.data.find(item=>item.ccy==='RUR').buy;
-				bot.sendMessage(chatId(msg), `${value} x ${ Math.round(rubSale*100)/100} = ${value*rubSale} грн`, {parse_mode: "HTML"})
+				let rubBuy = currencyData.data.find(item=>item.ccy==='RUR').buy;
+				bot.sendMessage(chatId(msg), `${value} x ${ Math.round(rubBuy*100)/100} = ${value*rubBuy} грн`, {parse_mode: "HTML"})
 			}
 		}else if (currencyFrom && currencyFrom.toLowerCase()==="uah"){
 			if (currencyTo.toLowerCase() == "usd"){
 				getCurrency()
-				let usdBuy = currencyData.data.find(item=>item.ccy==='USD').sale;
-				bot.sendMessage(chatId(msg), `${value} / ${ Math.round(usdBuy*100)/100} = ${Math.round(value*1000/usdBuy)/1000} дол`, {parse_mode: "HTML"})
+				let usdSale = currencyData.data.find(item=>item.ccy==='USD').sale;
+				bot.sendMessage(chatId(msg), `${value} / ${ Math.round(usdSale*100)/100} = ${Math.round(value*1000/usdSale)/1000} дол`, {parse_mode: "HTML"})
 			}
 			if (currencyTo.toLowerCase() == "euro"){
 				getCurrency()
-				let euroBuy = currencyData.data.find(item=>item.ccy==='EUR').sale;
-				bot.sendMessage(chatId(msg), `${value} / ${ Math.round(euroBuy*100)/100} = ${Math.round(value*1000/euroBuy)/1000} євро`, {parse_mode: "HTML"})
+				let euroSale = currencyData.data.find(item=>item.ccy==='EUR').sale;
+				bot.sendMessage(chatId(msg), `${value} / ${ Math.round(euroSale*100)/100} = ${Math.round(value*1000/euroSale)/1000} євро`, {parse_mode: "HTML"})
 			}
 			if (currencyTo.toLowerCase() == "rub"){
 				getCurrency()
@@ -149,8 +131,6 @@ bot.on('message', msg=>{
 				bot.sendMessage(chatId(msg), `Переконайтесь в правильності написання: 
 ${howToWrite}`, {parse_mode:"HTML"})
 		}
-		// console.log(str);
-		// bot.sendMessage(chatId(msg),str);	
 	}
 })
 
